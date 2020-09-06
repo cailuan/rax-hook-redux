@@ -22,15 +22,42 @@ export default function Home() {
   // useCallback根据场景使用依赖项
   const dispatchMiddle = useCallback(temDispatch(dispatch,state),[]) 
   const { Provider } = Context
-  return <Provider value={{ state, dispatchMiddle }}>
+  return <Provider value={{ state, dispatchMiddle,dispatch }}>
     <Page />
+    <MiddleComponent />
   </Provider>
+}
+const MiddleComponent = (props)=>{
+  return <Contextpage/>
+}
+
+const Contextpage = (props)=>{
+  let contValue = useContext(Context)
+  console.log(props, Context, reducer, initialState, contValue, 'props')
+  const onButtonClick = (dispatch) => {
+    dispatch({
+      type:'decrement'
+    })
+    // console.log(foo)
+  };
+  return (
+    <Context.Consumer>
+      {
+        ({state, dispatchMiddle,dispatch})=>{
+          // console.log(props,'props,context')
+          return <div onClick={()=>onButtonClick(dispatch)}>
+            home page {state.count}
+          </div>
+        }
+      }
+    </Context.Consumer>
+  );
 }
 
 const Page = (props) => {
 
   let contValue = useContext(Context)
-  // console.log(props, Context, reducer, initialState, contValue, 'props')
+  console.log(props, Context, reducer, initialState, contValue, 'props')
   // const [state, dispatch] = useReducer(reducer, initialState);
   const { state, dispatchMiddle } = contValue as any
   const inputEl = useRef(null);
